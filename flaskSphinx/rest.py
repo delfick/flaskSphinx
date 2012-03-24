@@ -19,7 +19,7 @@ class RestApiDirective(Directive):
         try:
             config = self.get_config('\n'.join(self.content.data))
         except ConfigParser.ParsingError, e:
-            self.state.document.report.warning(e)
+            self.state.document.reporter.warning(e)
             return []
         
         # Create restructured text from REST options
@@ -38,6 +38,6 @@ class RestApiDirective(Directive):
         '''Transform REST options into restructured text'''
         return '\n\n'.join('``%s``' % section for section in config.sections())
         
-def setup(app):   
+def setup(app):
     """Setup the rest_api directive""" 
     app.add_directive('rest_api', RestApiDirective)
