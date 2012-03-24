@@ -26,6 +26,7 @@ help:
 	@echo "  devhelp    to make HTML files and a Devhelp project"
 	@echo "  epub       to make an epub"
 	@echo "  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter"
+	@echo "  pdf        to make pdf files using rst2pdf"
 	@echo "  latexpdf   to make LaTeX files and run them through pdflatex"
 	@echo "  text       to make text files"
 	@echo "  man        to make manual pages"
@@ -40,6 +41,11 @@ html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+pdf:
+	$(SPHINXBUILD) -b pdf $(ALLSPHINXOPTS) _build/pdf
+	@echo
+	@echo "Build finished. The PDF files are in _build/pdf."
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
