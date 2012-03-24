@@ -3,17 +3,33 @@
 import flask
 
 def one():
+    '''
+        .. rest_api::
+            :response: 200
+    '''
     return "one!"
 
 def two():
+    '''
+        .. rest_api::
+            :response: 200
+    '''
     return "two!"
 
 class Three(object):
+    '''
+        .. rest_api::
+            :response: 200
+    '''
     __name__ = "Three"
     def __call__(self):
         return "three!"
 
 class Four(object):
+    '''
+        .. rest_api::
+            :response: 200
+    '''
     __name__ = "Four"
     def __call__(self):
         return "four!"
