@@ -4,22 +4,35 @@ import flask
 
 def one():
     '''
+        View to do nice things and stuff
+        
         .. rest_api::
-            :response: 200
+
+            [response]
+            200: asdflkjasdf
+            400: asdflaksdf
+            
+            [params]
+            thing: asdflkjlsadf
+
     '''
     return "one!"
 
 def two():
     '''
         .. rest_api::
-            :response: 200
+            [response]
+            200:
+
     '''
     return "two!"
 
 class Three(object):
     '''
         .. rest_api::
-            :response: 200
+            [response]
+            200:
+
     '''
     __name__ = "Three"
     def __call__(self):
@@ -28,7 +41,9 @@ class Three(object):
 class Four(object):
     '''
         .. rest_api::
-            :response: 200
+            [response]
+            200:
+
     '''
     __name__ = "Four"
     def __call__(self):

@@ -7,4 +7,3 @@ Example
 =======
 
 .. show_routes::
-    :app: 'app.app'
