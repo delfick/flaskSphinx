@@ -3,6 +3,7 @@
     And display a section for each route
     Using the __doc__ properties on the views they route to
 '''
+from sphinx.ext.autodoc import prepare_docstring
 from docutils.core import publish_doctree
 from sphinx.util.compat import Directive
 from docutils import nodes
@@ -38,8 +39,13 @@ class ShowRoutesDirective(Directive):
         title += nodes.Text(route)
         
         children.append(title)
-        children.extend(self.parse_string(view.__doc__))
+        children.extend(self.parse_doc(view.__doc__))
         return children
+    
+    def parse_doc(self, docstring):
+        '''Generate nodes from docstring'''
+        string = '\n'.join(prepare_docstring(docstring))
+        return self.parse_string(string)
     
     def parse_string(self, string):
         '''Generate nodes from restructured text string'''
