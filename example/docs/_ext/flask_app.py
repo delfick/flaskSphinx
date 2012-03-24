@@ -7,10 +7,10 @@ def setup_flask_app(app):
     import app
     return app.app
 
-def modify_rest_api(app, route, view, config, api):
+def modify_rest_api(app, route, view, config, context):
     '''Modify api if view is Four, for pure contrived example sake'''
     if view.__name__ == 'Four':
-        api['special'] = True
+        context['special'] = True
     
 def setup(app):
     '''Connect to setup-flask-app and modify-rest-api events'''

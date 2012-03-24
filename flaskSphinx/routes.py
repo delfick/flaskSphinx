@@ -45,23 +45,23 @@ class ShowRoutesDirective(Directive):
         
         # Get rest api from possible use of .. rest_api::
         self.parse_string(doc)
-        api = env.config._rest_api
         config = env.config._rest_config
-        if not api:
-            api = {}
+        context = env.config._rest_api
+        if not context:
+            context = {}
         
-        # Default view, route and doc in options
-        api['doc'] = doc
-        api['view'] = view
-        api['route'] = route
+        # Default view, route and doc in context
+        context['doc'] = doc
+        context['view'] = view
+        context['route'] = route
         
         # Use event to add any other context for the template
-        env.app.emit('modify-rest-api', route, view, config, api)
+        env.app.emit('modify-rest-api', route, view, config, context)
         
-        # Get template and render restructured text using api
+        # Get template and render restructured text using context
         template_env = self.get_template_env()
         template = template_env.get_template("rest_api/default.rst")
-        string = template.render(api=api)
+        string = template.render(api=context)
         
         # Return nodes from parsing the restructured text
         return self.parse_string(string)
