@@ -29,7 +29,7 @@ sys.path.extend([from_current('..'), from_current('_ext')])
 extensions = ['flaskSphinx.rest', 'flaskSphinx.routes', 'rst2pdf.pdfbuilder', 'flask_app']
 
 # Add any paths that contain templates here, relative to this directory.
-#templates_path = ['_templates']
+templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -65,7 +65,7 @@ release = '0.1'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', '_templates']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

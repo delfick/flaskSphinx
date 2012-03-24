@@ -35,6 +35,7 @@ class Three(object):
 
     '''
     __name__ = "Three"
+    requires_things = True
     def __call__(self):
         return "three!"
 

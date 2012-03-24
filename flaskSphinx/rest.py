@@ -28,6 +28,7 @@ class RestApiDirective(Directive):
         # Get options and put it on env
         # Used by flaskSphinx.routes plugin
         env.config._rest_api = self.get_api(config)
+        env.config._rest_config = config
         return []
     
     def get_api(self, config):
