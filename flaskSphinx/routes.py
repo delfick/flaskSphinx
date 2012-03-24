@@ -3,11 +3,16 @@
     And display a section for each route
     Using the __doc__ properties on the views they route to
 '''
+
+from sphinx.jinja2glue import BuiltinTemplateLoader
 from sphinx.ext.autodoc import prepare_docstring
 from sphinx.application import ExtensionError
-from docutils.core import publish_doctree
 from sphinx.util.compat import Directive
+
+from jinja2.sandbox import SandboxedEnvironment
+from docutils.core import publish_doctree
 from docutils import nodes
+import os
 
 class ShowRoutesDirective(Directive):
     """Directive for outputting routes from a flask app"""
@@ -31,17 +36,34 @@ class ShowRoutesDirective(Directive):
 
     def nodes_for_route(self, route, view):
         '''Create nodes for a single route'''
-        children = []
-        title = nodes.title()
-        title += nodes.Text(route)
+        env = self.state.document.settings.env
+        doc = '\n'.join(prepare_docstring(view.__doc__))
         
-        children.append(title)
-        children.extend(self.parse_doc(view.__doc__))
-        return children
-    
-    def parse_doc(self, docstring):
-        '''Generate nodes from docstring'''
-        string = '\n'.join(prepare_docstring(docstring))
+        # Reset values for rest api and rest config
+        env.config._rest_api = None
+        env.config._rest_config = None
+        
+        # Get rest api from possible use of .. rest_api::
+        self.parse_string(doc)
+        api = env.config._rest_api
+        config = env.config._rest_config
+        if not api:
+            api = {}
+        
+        # Default view, route and doc in options
+        api['doc'] = doc
+        api['view'] = view
+        api['route'] = route
+        
+        # Use event to add any other context for the template
+        env.app.emit('modify-rest-api', route, view, config, api)
+        
+        # Get template and render restructured text using api
+        template_env = self.get_template_env()
+        template = template_env.get_template("rest_api/default.rst")
+        string = template.render(api=api)
+        
+        # Return nodes from parsing the restructured text
         return self.parse_string(string)
     
     def parse_string(self, string):
@@ -75,8 +97,18 @@ class ShowRoutesDirective(Directive):
         for rule in app.url_map.iter_rules():
             rules[rule.rule] = app.view_functions[rule.endpoint]
         return rules
+    
+    def get_template_env(self):
+        '''Create jinja template environment'''
+        env = self.state.document.settings.env
+        current_dir = os.path.dirname(__file__)
+        template_dirs = [os.path.join(current_dir, 'flaskSphinx_templates'), current_dir]
+        template_loader = BuiltinTemplateLoader()
+        template_loader.init(env.app.builder, dirs=template_dirs)
+        return SandboxedEnvironment(loader=template_loader)
 
 def setup(app):   
     """Setup the show_routes directive""" 
     app.add_directive('show_routes', ShowRoutesDirective)
     app.add_event('setup-flask-app')
+    app.add_event('modify-rest-api')
