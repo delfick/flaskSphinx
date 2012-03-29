@@ -10,6 +10,7 @@ from sphinx.application import ExtensionError
 from sphinx.util.compat import Directive
 
 from jinja2.sandbox import SandboxedEnvironment
+from docutils.parsers.rst import directives
 from docutils.core import publish_doctree
 from docutils import nodes
 import os
@@ -17,7 +18,8 @@ import os
 class ShowRoutesDirective(Directive):
     """Directive for outputting routes from a flask app"""
     has_content = True
-        
+    option_spec= {'exclude' : directives.unchanged}
+    
     def run(self):
         '''Create nodes to represent the routes'''
         flask_app = self.get_app()
@@ -29,8 +31,10 @@ class ShowRoutesDirective(Directive):
         
         # Add nodes for each rule
         result = []
+        exclusions = self.options.get('exclude', '').split(',')
         for route, view in rules.items():
-            result.extend(self.nodes_for_route(route, view))
+            if route not in exclusions:
+                result.extend(self.nodes_for_route(route, view))
         
         return result
 
